@@ -1,12 +1,12 @@
-import React from 'react';
-import { 
-  Table, 
-  TableHead, 
-  TableRow, 
+import React from "react";
+import {
+  Table,
+  TableHead,
+  TableRow,
   TableColumn,
-  TableBody,
-} from '../components/dynoTable';
-import './App.scss';
+  TableBody
+} from "../components/dynoTable";
+import "./App.scss";
 
 function App() {
   return (
