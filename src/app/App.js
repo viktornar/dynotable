@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { take } from "lodash";
+import { debounce, take } from "lodash";
 import axios from "axios";
 import {
   Table,
@@ -11,6 +11,7 @@ import {
   HeadColumn
 } from "../components/dynoTable";
 import "./App.scss";
+import { multipleSort } from "../services";
 
 const CATS_API =
   "https://raw.githubusercontent.com/viktornar/dynotable/master/data/cats.json";
@@ -21,18 +22,38 @@ class App extends PureComponent {
     this.state = {
       error: null,
       isLoading: false,
-      cats: []
+      cats: [],
+      sortBy: [
+        {
+          prop: "name",
+          direction: 0
+        },
+        {
+          prop: "country",
+          direction: 0
+        },
+        {
+          prop: "favorite_greeting",
+          direction: 0
+        }
+      ]
     };
 
     this.handleSort = this.handleSort.bind(this);
+    this.fetchCats = this.fetchCats.bind(this);
+    this.loadWithDebounce = this.loadWithDebounce.bind(this);
   }
 
   componentDidMount() {
+    this.fetchCats();
+  }
+
+  fetchCats() {
     this.setState({ isLoading: true });
     axios
       .get(CATS_API)
       .then(({ data: { cats } }) => {
-        this.setState({ cats });
+        this.loadWithDebounce(take(cats, 1000), 0, 100);
         this.setState({ isLoading: false });
       })
       .catch(error => {
@@ -40,17 +61,36 @@ class App extends PureComponent {
       });
   }
 
+  loadWithDebounce(cats, start, end) {
+    this.setState(
+      { cats: [...this.state.cats, ...cats.slice(start, end)] },
+      () => {
+        debounce(() => {
+          this.loadWithDebounce(cats, end, end + 100)
+        }, 1000)();
+      }
+    );
+  }
+
   handleSort(propToSort) {
-    return sortOrder => {
-      console.log(propToSort, sortOrder);
+    return sortDirection => {
+      const { sortBy, cats } = this.state;
+      const index = sortBy.findIndex(({ prop }) => prop === propToSort);
+      const newSortBy = [...sortBy];
+      newSortBy[index].direction = sortDirection;
+      const newCats = [...cats];
+      multipleSort(newCats, newSortBy);
+      this.setState({ cats: newCats, sortBy: newSortBy });
     };
   }
 
   render() {
-    const { isLoading, cats } = this.state;
-    const catsToShow = take(cats, 10);
+    const { isLoading, cats, error } = this.state;
     return (
       <div className="App">
+        {error && (
+          <div className="App__error">Unexpected error occured: {error}</div>
+        )}
         <Table>
           <TableHead>
             <HeadRow>
@@ -70,8 +110,8 @@ class App extends PureComponent {
               <div className="App__loader">Loading...</div>
             ) : (
               <>
-                {catsToShow.length > 0 &&
-                  catsToShow.map(({ id, name, country, favorite_greeting }) => (
+                {cats.length > 0 &&
+                  cats.map(({ id, name, country, favorite_greeting }) => (
                     <TableRow key={id}>
                       <TableColumn>{name}</TableColumn>
                       <TableColumn>{country}</TableColumn>

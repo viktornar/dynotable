@@ -5,22 +5,24 @@ import "./HeadColumn.scss";
 export const SORT_ORDER = {
   NONE: 0,
   ASC: 1,
-  DESC: 2
+  DESC: -1
 };
 
-const SORT_ORDER_CLASSNAMES = ["", "HeadColumn--asc", "HeadColumn--desc"];
-
-export default function HeadColumn({children, onSortChange}) {
+export default function HeadColumn({ children, onSortChange = () => {} }) {
   const [sortOrder, setSortOrder] = useState(SORT_ORDER.NONE);
-  const sortOrderClassName = SORT_ORDER_CLASSNAMES[sortOrder];
+
   useEffect(() => {
-    if (onSortChange && sortOrder !== SORT_ORDER.NONE) {
+    if (sortOrder !== SORT_ORDER.NONE) {
       onSortChange(sortOrder);
     }
-  }, [sortOrder, onSortChange])
+  }, [sortOrder]);
+  
   return (
     <div
-      className={clsx("flexChild", "parentColumn", "HeadColumn", sortOrderClassName)}
+      className={clsx("flexChild", "parentColumn", "HeadColumn", {
+        "HeadColumn--asc": sortOrder === SORT_ORDER.ASC,
+        "HeadColumn--desc": sortOrder === SORT_ORDER.DESC
+      })}
       onClick={handleClick}
     >
       {children}
