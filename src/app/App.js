@@ -1,4 +1,5 @@
 import React, { PureComponent } from "react";
+import { take } from "lodash";
 import axios from "axios";
 import {
   Table,
@@ -11,7 +12,8 @@ import {
 } from "../components/dynoTable";
 import "./App.scss";
 
-const CATS_API = "https://raw.githubusercontent.com/viktornar/dynotable/master/data/cats.json";
+const CATS_API =
+  "https://raw.githubusercontent.com/viktornar/dynotable/master/data/cats.json";
 
 class App extends PureComponent {
   constructor(props) {
@@ -28,9 +30,7 @@ class App extends PureComponent {
   componentDidMount() {
     this.setState({ isLoading: true });
     axios
-      .get(
-        CATS_API
-      )
+      .get(CATS_API)
       .then(({ data: { cats } }) => {
         this.setState({ cats });
         this.setState({ isLoading: false });
@@ -40,21 +40,29 @@ class App extends PureComponent {
       });
   }
 
-  handleSort(sortOrder) {
-    // TODO: Implement sorting that can sort a big amount of data
+  handleSort(propToSort) {
+    return sortOrder => {
+      console.log(propToSort, sortOrder);
+    };
   }
 
   render() {
     const { isLoading, cats } = this.state;
+    const catsToShow = take(cats, 10);
     return (
       <div className="App">
         <Table>
           <TableHead>
             <HeadRow>
-              <HeadColumn onSortChange={this.handleSort}>Name</HeadColumn>
-              <HeadColumn onSortChange={this.handleSort}>Age</HeadColumn>
-              <HeadColumn onSortChange={this.handleSort}>Country</HeadColumn>
-              <HeadColumn onSortChange={this.handleSort}>Greeting</HeadColumn>
+              <HeadColumn onSortChange={this.handleSort("name")}>
+                Name
+              </HeadColumn>
+              <HeadColumn onSortChange={this.handleSort("country")}>
+                Country
+              </HeadColumn>
+              <HeadColumn onSortChange={this.handleSort("favorite_greeting")}>
+                Greeting
+              </HeadColumn>
             </HeadRow>
           </TableHead>
           <TableBody>
@@ -62,18 +70,14 @@ class App extends PureComponent {
               <div className="App__loader">Loading...</div>
             ) : (
               <>
-                <TableRow>
-                  <TableColumn>Test1</TableColumn>
-                  <TableColumn>Test2</TableColumn>
-                  <TableColumn>Test2</TableColumn>
-                  <TableColumn>Test2</TableColumn>
-                </TableRow>
-                <TableRow>
-                  <TableColumn>Test1</TableColumn>
-                  <TableColumn>Test2</TableColumn>
-                  <TableColumn>Test2</TableColumn>
-                  <TableColumn>Test2</TableColumn>
-                </TableRow>
+                {catsToShow.length > 0 &&
+                  catsToShow.map(({ id, name, country, favourite_greeting }) => (
+                    <TableRow key={id}>
+                      <TableColumn>{name}</TableColumn>
+                      <TableColumn>{country}</TableColumn>
+                      <TableColumn>{favourite_greeting}</TableColumn>
+                    </TableRow>
+                  ))}
               </>
             )}
           </TableBody>
