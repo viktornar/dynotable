@@ -4,7 +4,9 @@ import {
   TableHead,
   TableRow,
   TableColumn,
-  TableBody
+  TableBody,
+  HeadRow,
+  HeadColumn
 } from "../components/dynoTable";
 import "./App.scss";
 
@@ -13,10 +15,10 @@ function App() {
     <div className="App">
       <Table>
         <TableHead>
-          <TableRow>
-            <TableColumn>Test1</TableColumn>
-            <TableColumn>Test2</TableColumn>
-          </TableRow>
+          <HeadRow>
+            <HeadColumn>Test1</HeadColumn>
+            <HeadColumn>Test2</HeadColumn>
+          </HeadRow>
         </TableHead>
         <TableBody>
           <TableRow>
