@@ -71,11 +71,11 @@ class App extends PureComponent {
             ) : (
               <>
                 {catsToShow.length > 0 &&
-                  catsToShow.map(({ id, name, country, favourite_greeting }) => (
+                  catsToShow.map(({ id, name, country, favorite_greeting }) => (
                     <TableRow key={id}>
                       <TableColumn>{name}</TableColumn>
                       <TableColumn>{country}</TableColumn>
-                      <TableColumn>{favourite_greeting}</TableColumn>
+                      <TableColumn>{favorite_greeting}</TableColumn>
                     </TableRow>
                   ))}
               </>
