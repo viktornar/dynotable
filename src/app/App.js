@@ -11,15 +11,18 @@ import {
 import "./App.scss";
 
 function App() {
+  useEffect(() => {
+    // Implement fetch logic;
+  }, []);
   return (
     <div className="App">
       <Table>
         <TableHead>
           <HeadRow>
-            <HeadColumn>Name</HeadColumn>
-            <HeadColumn>Age</HeadColumn>
-            <HeadColumn>Country</HeadColumn>
-            <HeadColumn>Favourite greeting</HeadColumn>
+            <HeadColumn onSortChange={handleSort}>Name</HeadColumn>
+            <HeadColumn onSortChange={handleSort}>Age</HeadColumn>
+            <HeadColumn onSortChange={handleSort}>Country</HeadColumn>
+            <HeadColumn onSortChange={handleSort}>Greeting</HeadColumn>
           </HeadRow>
         </TableHead>
         <TableBody>
@@ -39,6 +42,10 @@ function App() {
       </Table>
     </div>
   );
+
+  function handleSort(sortOrder) {
+    console.log(sortOrder);
+  }
 }
 
 export default App;
