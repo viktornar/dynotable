@@ -4,15 +4,15 @@ export function multipleSort(arr, sortBy) {
       let i = 0;
       let result = 0;
       while (i < sortBy.length && result === 0) {
-        if(left[sortBy[i].prop] < right[sortBy[i].prop]) {
+        if (left[sortBy[i].prop] < right[sortBy[i].prop]) {
           result = -1;
         }
 
-        if(left[sortBy[i].prop] > right[sortBy[i].prop]) {
+        if (left[sortBy[i].prop] > right[sortBy[i].prop]) {
           result = 1;
         }
 
-        result = result * sortBy[i].direction; 
+        result = result * sortBy[i].direction;
         i++;
       }
       return result;

@@ -52,10 +52,10 @@ describe("Service", () => {
     ];
 
     multipleSort(cats, sortBy);
-    expect(cats[0].age).toBe(4)
-    expect(cats[0].country).toBe("Nicaragua")
-    expect(cats[4].age).toBe(15)
-    expect(cats[2].country).toBe("Somalia")
-    expect(cats[4].age).toBe(15)
+    expect(cats[0].age).toBe(4);
+    expect(cats[0].country).toBe("Nicaragua");
+    expect(cats[4].age).toBe(15);
+    expect(cats[2].country).toBe("Somalia");
+    expect(cats[4].age).toBe(15);
   });
 });

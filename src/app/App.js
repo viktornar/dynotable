@@ -16,7 +16,7 @@ class App extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      sortedCats: [],
+      sortedData: [],
       sortBy: [
         {
           prop: "name",
@@ -38,27 +38,27 @@ class App extends PureComponent {
 
   handleSort(propToSort) {
     return sortDirection => {
-      const { sortBy, sortedCats } = this.state;
+      const { sortBy, sortedData } = this.state;
       const index = sortBy.findIndex(({ prop }) => prop === propToSort);
       const newSortBy = [...sortBy];
       newSortBy[index].direction = sortDirection;
-      const newCats = [...sortedCats];
+      const newCats = [...sortedData];
       multipleSort(newCats, newSortBy);
-      this.setState({ sortedCats: newCats, sortBy: newSortBy });
+      this.setState({ sortedData: newCats, sortBy: newSortBy });
     };
   }
 
   componentDidUpdate(_prevProps, prevState) {
-    const { sortedCats } = prevState;
-    const { cats } = this.props;
-    if (sortedCats.length !== cats.length) {
-      this.setState({ sortedCats: cats });
+    const { sortedData } = prevState;
+    const { data } = this.props;
+    if (sortedData.length !== data.length) {
+      this.setState({ sortedData: data });
     }
   }
 
   render() {
     const { isFetching, error } = this.props;
-    const { sortedCats } = this.state;
+    const { sortedData } = this.state;
     return (
       <div className="App">
         {error && (
@@ -83,8 +83,8 @@ class App extends PureComponent {
               <div className="App__loader">Data is fetching...</div>
             ) : (
               <>
-                {sortedCats.length > 0 &&
-                  sortedCats.map(({ id, name, country, favorite_greeting }) => (
+                {sortedData.length > 0 &&
+                  sortedData.map(({ id, name, country, favorite_greeting }) => (
                     <BodyRow key={id}>
                       <BodyColumn>{name}</BodyColumn>
                       <BodyColumn>{country}</BodyColumn>

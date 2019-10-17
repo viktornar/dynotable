@@ -34,7 +34,6 @@ export default function withCatsFetcher(WrappedComponent, withDebounce) {
           } else {
             this.setState({ cats, isFetching: false });
           }
-          
         })
         .catch(error => {
           this.setState({ error, isFetching: false });
@@ -57,7 +56,7 @@ export default function withCatsFetcher(WrappedComponent, withDebounce) {
       return (
         <WrappedComponent
           isFetching={isFetching}
-          cats={cats}
+          data={cats}
           error={error}
           {...this.props}
         />
