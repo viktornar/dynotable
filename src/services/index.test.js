@@ -1,4 +1,4 @@
-import { multipleSort } from "./index";
+import { multipleSort, quickMultipleSort } from "./index";
 
 describe("Service", () => {
   it("sort should sort cats by multiple properties", () => {

@@ -11,7 +11,7 @@ import {
   HeadColumn
 } from "../components/dynoTable";
 import "./App.scss";
-import { multipleSort } from "../services";
+import { multipleSort, quickMultipleSort } from "../services";
 
 const CATS_API =
   "https://raw.githubusercontent.com/viktornar/dynotable/master/data/cats.json";
@@ -53,7 +53,7 @@ class App extends PureComponent {
     axios
       .get(CATS_API)
       .then(({ data: { cats } }) => {
-        this.loadWithDebounce(take(cats, 1000), 0, 100);
+        this.loadWithDebounce(cats, 0, 100);
         this.setState({ isLoading: false });
       })
       .catch(error => {
@@ -67,7 +67,7 @@ class App extends PureComponent {
       () => {
         debounce(() => {
           this.loadWithDebounce(cats, end, end + 100)
-        }, 1000)();
+        }, 500)();
       }
     );
   }
