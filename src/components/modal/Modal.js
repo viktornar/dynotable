@@ -1,8 +1,8 @@
-import React from "react";
+import React, { PureComponent } from "react";
 import ReactDOM from "react-dom";
 import "./Modal.scss";
 
-export default class Modal extends React.Component {
+export default class Modal extends PureComponent {
   componentDidMount() {
     this.modalTarget = document.createElement("div");
     this.modalBackdrop = document.createElement("div");

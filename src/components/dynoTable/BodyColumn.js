@@ -1,6 +1,12 @@
-import React from "react";
+import React, { memo } from "react";
 import "./BodyColumn.scss";
 
-export default function BodyColumn({ children, className }) {
-  return <div className={`flexChild columnParent BodyColumn ${className}`}>{children}</div>;
+function BodyColumn({ children, className }) {
+  return (
+    <div className={`flexChild columnParent BodyColumn ${className}`}>
+      {children}
+    </div>
+  );
 }
+
+export default memo(BodyColumn);

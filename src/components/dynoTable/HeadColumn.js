@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import clsx from "classnames";
 import "./HeadColumn.scss";
 
@@ -8,7 +8,7 @@ export const SORT_ORDER = {
   DESC: -1
 };
 
-export default function HeadColumn({ children, onSortChange = () => {} }) {
+function HeadColumn({ children, onSortChange = () => {} }) {
   const [sortOrder, setSortOrder] = useState(SORT_ORDER.NONE);
 
   useEffect(() => {
@@ -46,3 +46,5 @@ export default function HeadColumn({ children, onSortChange = () => {} }) {
     }
   }
 }
+
+export default memo(HeadColumn);
