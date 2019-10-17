@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "b5a885fd782952bf97d855d627403d3f",
+    "revision": "440e149d3ee15a03b3b4ff5d2fa2ab36",
     "url": "/dynotable/index.html"
   },
   {
-    "revision": "ee951174a3943066af8a",
+    "revision": "e878cc8b222d2a673603",
     "url": "/dynotable/static/css/main.e575d945.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/dynotable/static/js/2.40a6470c.chunk.js"
   },
   {
-    "revision": "ee951174a3943066af8a",
-    "url": "/dynotable/static/js/main.3c8ce247.chunk.js"
+    "revision": "e878cc8b222d2a673603",
+    "url": "/dynotable/static/js/main.90280606.chunk.js"
   },
   {
     "revision": "5aef8f7145bcf0262bac",

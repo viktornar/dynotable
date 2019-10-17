@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/dynotable/static/css/main.e575d945.chunk.css",
-    "main.js": "/dynotable/static/js/main.3c8ce247.chunk.js",
-    "main.js.map": "/dynotable/static/js/main.3c8ce247.chunk.js.map",
+    "main.js": "/dynotable/static/js/main.90280606.chunk.js",
+    "main.js.map": "/dynotable/static/js/main.90280606.chunk.js.map",
     "runtime-main.js": "/dynotable/static/js/runtime-main.93443573.js",
     "runtime-main.js.map": "/dynotable/static/js/runtime-main.93443573.js.map",
     "static/js/2.40a6470c.chunk.js": "/dynotable/static/js/2.40a6470c.chunk.js",
     "static/js/2.40a6470c.chunk.js.map": "/dynotable/static/js/2.40a6470c.chunk.js.map",
     "index.html": "/dynotable/index.html",
-    "precache-manifest.ec27e2a437c87e83e2a56d6c31302388.js": "/dynotable/precache-manifest.ec27e2a437c87e83e2a56d6c31302388.js",
+    "precache-manifest.c202eafae26158852cebeb1b0656f629.js": "/dynotable/precache-manifest.c202eafae26158852cebeb1b0656f629.js",
     "service-worker.js": "/dynotable/service-worker.js",
     "static/css/main.e575d945.chunk.css.map": "/dynotable/static/css/main.e575d945.chunk.css.map"
   },
@@ -16,6 +16,6 @@
     "static/js/runtime-main.93443573.js",
     "static/js/2.40a6470c.chunk.js",
     "static/css/main.e575d945.chunk.css",
-    "static/js/main.3c8ce247.chunk.js"
+    "static/js/main.90280606.chunk.js"
   ]
 }
