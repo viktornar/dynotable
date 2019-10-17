@@ -1,4 +1,5 @@
 import React, { PureComponent } from "react";
+import clsx from "classnames";
 import {
   Table,
   TableHead,
@@ -35,12 +36,14 @@ export class App extends PureComponent {
         }
       ],
       isPagination: true,
-      currentPage: 1
+      currentPage: 1,
+      selectedItemId: ""
     };
 
-    this.handleSort = this.handleSort.bind(this);
+    this.handleSortChange = this.handleSortChange.bind(this);
     this.handleSettingsChange = this.handleSettingsChange.bind(this);
     this.handlePaginationChange = this.handlePaginationChange.bind(this);
+    this.handleRowClick = this.handleRowClick.bind(this);
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -49,7 +52,7 @@ export class App extends PureComponent {
     }
   }
 
-  handleSort(propToSort) {
+  handleSortChange(propToSort) {
     return sortDirection => {
       const { sortBy } = this.state;
       const index = sortBy.findIndex(({ prop }) => prop === propToSort);
@@ -69,9 +72,13 @@ export class App extends PureComponent {
     this.setState({ currentPage });
   }
 
+  handleRowClick(selectedItemId) {
+    this.setState({selectedItemId})
+  }
+
   render() {
     const { isFetching, error } = this.props;
-    const { isPagination, data, currentPage, sortBy } = this.state;
+    const { isPagination, data, currentPage, sortBy, selectedItemId } = this.state;
     multipleSort(data, sortBy);
     const dataToShow = isPagination ? sliceByRange(data, currentPage, ROWS_PER_PAGE) : data;
 
@@ -89,13 +96,13 @@ export class App extends PureComponent {
         >
           <TableHead>
             <HeadRow>
-              <HeadColumn onSortChange={this.handleSort("name")}>
+              <HeadColumn onSortChange={this.handleSortChange("name")}>
                 Name
               </HeadColumn>
-              <HeadColumn onSortChange={this.handleSort("country")}>
+              <HeadColumn onSortChange={this.handleSortChange("country")}>
                 Country
               </HeadColumn>
-              <HeadColumn onSortChange={this.handleSort("favorite_greeting")}>
+              <HeadColumn onSortChange={this.handleSortChange("favorite_greeting")}>
                 Greeting
               </HeadColumn>
             </HeadRow>
@@ -106,13 +113,17 @@ export class App extends PureComponent {
             ) : (
               <>
                 {dataToShow.length > 0 &&
-                  dataToShow.map(({ id, name, country, favorite_greeting }) => (
-                    <BodyRow key={id}>
-                      <BodyColumn>{name}</BodyColumn>
-                      <BodyColumn>{country}</BodyColumn>
-                      <BodyColumn>{favorite_greeting}</BodyColumn>
+                  dataToShow.map(({ id, name, country, favorite_greeting }) => { 
+                    const selectedClassName = clsx({
+                      "App__table-row--selected": selectedItemId === id
+                    });
+                    return (
+                    <BodyRow key={id} itemId={id} onRowClick={this.handleRowClick}>
+                      <BodyColumn className={selectedClassName}>{name}</BodyColumn>
+                      <BodyColumn className={selectedClassName}>{country}</BodyColumn>
+                      <BodyColumn className={selectedClassName}>{favorite_greeting}</BodyColumn>
                     </BodyRow>
-                  ))}
+                  )})}
               </>
             )}
           </TableBody>
