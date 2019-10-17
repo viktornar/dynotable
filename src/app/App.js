@@ -13,6 +13,8 @@ import { multipleSort } from "../utils";
 import withCatsFetcher from "../hocs/withCatsFetcher";
 import Settings from "../components/settings/Settings";
 
+const ROWS_PER_PAGE = 10;
+
 export class App extends PureComponent {
   constructor(props) {
     super(props);
@@ -31,22 +33,14 @@ export class App extends PureComponent {
           prop: "favorite_greeting",
           direction: 0
         }
-      ]
+      ],
+      isPagination: true,
+      currentPage: 1
     };
 
     this.handleSort = this.handleSort.bind(this);
-  }
-
-  handleSort(propToSort) {
-    return sortDirection => {
-      const { sortBy, sortedData } = this.state;
-      const index = sortBy.findIndex(({ prop }) => prop === propToSort);
-      const newSortBy = [...sortBy];
-      newSortBy[index].direction = sortDirection;
-      const newCats = [...sortedData];
-      multipleSort(newCats, newSortBy);
-      this.setState({ sortedData: newCats, sortBy: newSortBy });
-    };
+    this.handleSettingsChange = this.handleSettingsChange.bind(this);
+    this.handlePaginationChange = this.handlePaginationChange.bind(this);
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -57,16 +51,56 @@ export class App extends PureComponent {
     }
   }
 
+  handleSort(propToSort) {
+    return sortDirection => {
+      const { sortBy, sortedData } = this.state;
+      const index = sortBy.findIndex(({ prop }) => prop === propToSort);
+      const newSortBy = [...sortBy];
+      newSortBy[index].direction = sortDirection;
+      const newData = [...sortedData];
+      multipleSort(newData, newSortBy);
+      this.setState({
+        sortedData: newData,
+        sortBy: newSortBy
+      });
+    };
+  }
+
+  handleSettingsChange({ isPagination }) {
+    this.setState({ isPagination });
+  }
+
+  handlePaginationChange(currentPage) {
+    console.log(currentPage);
+    this.setState({ currentPage });
+  }
+
+  getSlicedData(sortedData, currentPage, isPagination) {
+    return isPagination
+      ? sortedData.slice(
+          (currentPage - 1) * ROWS_PER_PAGE,
+          currentPage * ROWS_PER_PAGE
+        )
+      : sortedData;
+  }
+
   render() {
     const { isFetching, error } = this.props;
-    const { sortedData } = this.state;
+    const { isPagination, sortedData, currentPage } = this.state;
+    const data = this.getSlicedData(sortedData, currentPage, isPagination);
+
     return (
       <div className="App">
         {error && (
           <div className="App__error">Unexpected error occured: {error}</div>
         )}
-        <Settings onSettingsChange={() => {}} />
-        <Table>
+        <Settings onSettingsChange={(this.handleSettingsChange)} defaultPagination={isPagination} />
+        <Table
+          isPagination={isPagination}
+          count={sortedData.length}
+          rowsPerPage={ROWS_PER_PAGE}
+          onPaginationChange={this.handlePaginationChange}
+        >
           <TableHead>
             <HeadRow>
               <HeadColumn onSortChange={this.handleSort("name")}>
@@ -85,9 +119,9 @@ export class App extends PureComponent {
               <div className="App__loader">Data is fetching...</div>
             ) : (
               <>
-                {sortedData.length > 0 &&
-                  sortedData.map(({ id, name, country, favorite_greeting }) => (
-                    <BodyRow key={id}>
+                {data.length > 0 &&
+                  data.map(({ name, country, favorite_greeting }, idx) => (
+                    <BodyRow key={idx}>
                       <BodyColumn>{name}</BodyColumn>
                       <BodyColumn>{country}</BodyColumn>
                       <BodyColumn>{favorite_greeting}</BodyColumn>

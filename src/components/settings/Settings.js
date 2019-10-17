@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./Settings.scss";
 
-export default function Settings({ onSettingsChange = () => {} }) {
-  const [isPagination, setIsPagination] = useState(false);
+export default function Settings({ onSettingsChange = () => {}, defaultPagination = false }) {
+  const [isPagination, setIsPagination] = useState(defaultPagination);
 
   useEffect(
     function() {

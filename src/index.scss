@@ -17,4 +17,5 @@ code {
 }
 
 // Common styles for shared using across components
-@import './layout';
+@import './commonStyles/layout';
+@import './commonStyles/buttons';
