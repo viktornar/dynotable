@@ -1,8 +1,8 @@
 import React, { memo } from "react";
 
-function BodyRow({ children, onRowClick = () => {} }) {
+function BodyRow({ children, onRowClick = () => {}, className = "" }) {
   return (
-    <div className="flexChild rowParent" onClick={handleClick}>
+    <div className={`flexChild rowParent ${className}`} onClick={handleClick}>
       {children}
     </div>
   );

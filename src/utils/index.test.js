@@ -66,5 +66,5 @@ describe("Utility", () => {
     expect(slicedCats2.length).toBe(2);
     const slicedCats3 = sliceByRange(cats, 1, 3);
     expect(slicedCats3.length).toBe(3);
-  })
+  });
 });

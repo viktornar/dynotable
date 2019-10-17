@@ -29,7 +29,7 @@ export default function withCatsFetcher(WrappedComponent, withDebounce) {
         .get(CATS_API)
         .then(({ data: { cats } }) => {
           if (withDebounce) {
-            this.loadWithDebounce(cats, 0, 100);
+            this.loadWithDebounce(cats, 0, 200);
             this.setState({ isFetching: false });
           } else {
             this.setState({ cats, isFetching: false });
@@ -45,7 +45,7 @@ export default function withCatsFetcher(WrappedComponent, withDebounce) {
         { cats: [...this.state.cats, ...cats.slice(start, end)] },
         () => {
           debounce(() => {
-            this.loadWithDebounce(cats, end, end + 100);
+            this.loadWithDebounce(cats, end, end * 2);
           }, 500)();
         }
       );

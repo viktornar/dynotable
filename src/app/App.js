@@ -10,12 +10,13 @@ import {
   HeadColumn
 } from "../components/dynoTable";
 import "./App.scss";
-import { multipleSort, sliceByRange } from "../utils";
+import { multipleSort, sliceByRange, sliceAndAddByRange } from "../utils";
 import withCatsFetcher from "../hocs/withCatsFetcher";
 import Settings from "../components/settings/Settings";
 import Modal from "../components/modal/Modal";
 
 const ROWS_PER_PAGE = 10;
+const ROWS_PER_SCROLL = 100;
 
 export class App extends PureComponent {
   constructor(props) {
@@ -38,21 +39,61 @@ export class App extends PureComponent {
       ],
       isPagination: true,
       currentPage: 1,
+      currentScroll: 1,
       selectedItemId: "",
       showModal: false,
       selectedItem: {}
     };
 
+    this.ticking = false;
+    this.lastKnownScrollPosition = 0;
     this.handleSortChange = this.handleSortChange.bind(this);
     this.handleSettingsChange = this.handleSettingsChange.bind(this);
     this.handlePaginationChange = this.handlePaginationChange.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
     this.handleModalButtonClick = this.handleModalButtonClick.bind(this);
+    this.handleLazyLoadOnScroll = this.handleLazyLoadOnScroll.bind(this);
   }
 
   componentDidUpdate(_prevProps, prevState) {
     if (prevState.data.length !== this.props.data.length) {
       this.setState({ data: this.props.data });
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener("scroll", this.handleLazyLoadOnScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleLazyLoadOnScroll);
+  }
+
+  handleLazyLoadOnScroll() {
+    this.lastKnownScrollPosition = window.scrollY;
+
+    if (!this.ticking) {
+      window.requestAnimationFrame(() => {
+        const pageHeight = Math.max(
+          document.body.scrollHeight,
+          document.body.offsetHeight
+        );
+        const scrollDistanceFromBottom =
+          pageHeight - (window.pageYOffset + window.innerHeight);
+        console.log(
+          scrollDistanceFromBottom,
+          this.lastKnownScrollPosition,
+          pageHeight
+        );
+        if (scrollDistanceFromBottom < 150) {
+          this.setState({ currentScroll: this.state.currentScroll + 1 });
+          window.scrollTo = this.lastKnownScrollPosition - 200;
+        }
+
+        this.ticking = false;
+      });
+
+      this.ticking = true;
     }
   }
 
@@ -96,6 +137,7 @@ export class App extends PureComponent {
       isPagination,
       data,
       currentPage,
+      currentScroll,
       sortBy,
       selectedItemId,
       selectedItem,
@@ -104,12 +146,14 @@ export class App extends PureComponent {
     multipleSort(data, sortBy);
     const dataToShow = isPagination
       ? sliceByRange(data, currentPage, ROWS_PER_PAGE)
-      : data;
+      : sliceAndAddByRange(data, currentScroll, ROWS_PER_SCROLL);
 
     return (
       <div className="App">
         {error && (
-          <div className="App__error">Unexpected error occured: {error}</div>
+          <div className="App__error">
+            Unexpected error occured: {error.message}
+          </div>
         )}
         <Settings
           onSettingsChange={this.handleSettingsChange}
@@ -142,32 +186,40 @@ export class App extends PureComponent {
             ) : (
               <>
                 {dataToShow.length > 0 &&
-                  dataToShow.map(({ id, name, country, favorite_greeting }) => {
-                    const selectedClassName = clsx({
-                      "App__table-row--selected": selectedItemId === id
-                    });
-                    return (
-                      <BodyRow
-                        key={id}
-                        onRowClick={this.handleRowClick({
-                          id,
-                          name,
-                          country,
-                          favorite_greeting
-                        })}
-                      >
-                        <BodyColumn className={selectedClassName}>
-                          {name}
-                        </BodyColumn>
-                        <BodyColumn className={selectedClassName}>
-                          {country}
-                        </BodyColumn>
-                        <BodyColumn className={selectedClassName}>
-                          {favorite_greeting}
-                        </BodyColumn>
-                      </BodyRow>
-                    );
-                  })}
+                  dataToShow.map(
+                    ({ id, name, country, favorite_greeting }, idx) => {
+                      const selectedClassName = clsx({
+                        "App__table-row--selected": selectedItemId === id
+                      });
+
+                      const lastRowClassName = clsx({
+                        "App__table-row--last":
+                          !isPagination && idx === dataToShow.length - 1
+                      });
+
+                      return (
+                        <BodyRow
+                          key={id}
+                          onRowClick={this.handleRowClick({
+                            id,
+                            name,
+                            country,
+                            favorite_greeting
+                          })}
+                        >
+                          <BodyColumn className={selectedClassName}>
+                            {name}
+                          </BodyColumn>
+                          <BodyColumn className={selectedClassName}>
+                            {country}
+                          </BodyColumn>
+                          <BodyColumn className={selectedClassName}>
+                            {favorite_greeting}
+                          </BodyColumn>
+                        </BodyRow>
+                      );
+                    }
+                  )}
               </>
             )}
           </TableBody>
@@ -179,7 +231,7 @@ export class App extends PureComponent {
                 <div className="flexChild columnParent">
                   <BodyRow>
                     <div className="flexChild columnParent App__modal-table-head">
-                      <BodyColumn >Name</BodyColumn>
+                      <BodyColumn>Name</BodyColumn>
                       <BodyColumn>Country</BodyColumn>
                       <BodyColumn>Greeting</BodyColumn>
                     </div>
@@ -200,4 +252,4 @@ export class App extends PureComponent {
   }
 }
 
-export default withCatsFetcher(App, true);
+export default withCatsFetcher(App, false);
