@@ -43,5 +43,8 @@ export function sliceAndAddByRange(arr, index, range) {
     return [];
   }
 
-  return [...sliceAndAddByRange(arr, index - 1, range),...sliceByRange(arr, index, range)];
+  return [
+    ...sliceAndAddByRange(arr, index - 1, range),
+    ...sliceByRange(arr, index, range)
+  ];
 }
