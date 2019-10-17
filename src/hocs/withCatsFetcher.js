@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { debounce, take } from "lodash";
+import { debounce } from "../utils";
 import axios from "axios";
 
 const CATS_API =
@@ -32,7 +32,7 @@ export default function withCatsFetcher(WrappedComponent, withDebounce) {
             this.loadWithDebounce(cats, 0, 100);
             this.setState({ isFetching: false });
           } else {
-            this.setState({ cats: take(cats, 100), isFetching: false });
+            this.setState({ cats, isFetching: false });
           }
         })
         .catch(error => {

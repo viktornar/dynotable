@@ -21,3 +21,12 @@ export function multipleSort(arr, sortBy) {
     throw new Error("Unsupported type for first argument");
   }
 }
+
+export function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
+}

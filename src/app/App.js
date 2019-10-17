@@ -71,7 +71,6 @@ export class App extends PureComponent {
   }
 
   handlePaginationChange(currentPage) {
-    console.log(currentPage);
     this.setState({ currentPage });
   }
 
