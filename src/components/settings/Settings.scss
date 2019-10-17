@@ -1,0 +1,22 @@
+.Settings {
+  align-self: flex-start;
+  margin:3px;
+
+  button {
+    transition: background-color 100ms ease-in-out;
+    display: inline-block;
+    padding: 0 20px;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    line-height: 36px;
+    font-weight: 700;
+    text-decoration: none;
+    min-width: 200px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    border: solid white;
+    color: white;
+    background-color: transparent;
+  }
+}

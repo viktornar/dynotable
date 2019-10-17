@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./Settings.scss";
 
 export default function Settings({ onSettingsChange = () => {} }) {
   const [isPagination, setIsPagination] = useState(false);
@@ -6,14 +7,16 @@ export default function Settings({ onSettingsChange = () => {} }) {
   useEffect(
     function() {
       onSettingsChange({ isPagination });
-      // eslint-disable-next-line
     },
+    // eslint-disable-next-line
     [isPagination]
   );
 
   return (
-    <div>
-      <button onClick={() => {}}>Switch to ...</button>
+    <div className="Settings">
+      <button onClick={handleClick}>{`Switch to ${
+        isPagination ? "full view" : "pages"
+      }`}</button>
     </div>
   );
 
