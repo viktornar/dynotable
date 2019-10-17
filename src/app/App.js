@@ -80,10 +80,15 @@ export class App extends PureComponent {
         );
         const scrollDistanceFromBottom =
           pageHeight - (window.pageYOffset + window.innerHeight);
-
+        
+        // Start lazy load on scoll down
         if (scrollDistanceFromBottom < 150) {
           this.setState({ currentScroll: this.state.currentScroll + 1 });
-          window.scrollTo = this.lastKnownScrollPosition - 200;
+        }
+
+        // Reset data when scroll on top
+        if (this.lastKnownScrollPosition < 150) {
+          this.setState({ currentScroll: 1 });
         }
 
         this.ticking = false;
