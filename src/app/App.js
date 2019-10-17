@@ -188,11 +188,6 @@ export class App extends PureComponent {
                         "App__table-row--selected": selectedItemId === id
                       });
 
-                      const lastRowClassName = clsx({
-                        "App__table-row--last":
-                          !isPagination && idx === dataToShow.length - 1
-                      });
-
                       return (
                         <BodyRow
                           key={id}

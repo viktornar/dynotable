@@ -1,5 +1,4 @@
 import React, { PureComponent } from "react";
-import { debounce } from "../utils";
 import axios from "axios";
 
 const CATS_API =
