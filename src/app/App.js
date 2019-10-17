@@ -9,7 +9,7 @@ import {
   HeadColumn
 } from "../components/dynoTable";
 import "./App.scss";
-import { multipleSort, sliceData } from "../utils";
+import { multipleSort, sliceByRange } from "../utils";
 import withCatsFetcher from "../hocs/withCatsFetcher";
 import Settings from "../components/settings/Settings";
 
@@ -73,7 +73,7 @@ export class App extends PureComponent {
     const { isFetching, error } = this.props;
     const { isPagination, data, currentPage, sortBy } = this.state;
     multipleSort(data, sortBy);
-    const dataToShow = isPagination ? sliceData(data, currentPage, ROWS_PER_PAGE) : data;
+    const dataToShow = isPagination ? sliceByRange(data, currentPage, ROWS_PER_PAGE) : data;
 
     return (
       <div className="App">
@@ -106,8 +106,8 @@ export class App extends PureComponent {
             ) : (
               <>
                 {dataToShow.length > 0 &&
-                  dataToShow.map(({ name, country, favorite_greeting }, idx) => (
-                    <BodyRow key={idx}>
+                  dataToShow.map(({ id, name, country, favorite_greeting }) => (
+                    <BodyRow key={id}>
                       <BodyColumn>{name}</BodyColumn>
                       <BodyColumn>{country}</BodyColumn>
                       <BodyColumn>{favorite_greeting}</BodyColumn>

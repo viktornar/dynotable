@@ -31,9 +31,13 @@ export function debounce(func, wait) {
   };
 }
 
-export function sliceData(arr, index, range) {
+export function sliceByRange(arr, index, range) {
   if (!Array.isArray(arr)) {
     throw new Error("Unsupported data type");
+  }
+
+  if (index <=0) {
+    throw new Error("Index must be not null and not negative");
   }
 
   return arr.slice((index - 1) * range, index * range);
