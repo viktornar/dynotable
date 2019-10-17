@@ -11,8 +11,9 @@ import {
 import "./App.scss";
 import { multipleSort } from "../utils";
 import withCatsFetcher from "../hocs/withCatsFetcher";
+import Settings from "../components/settings/Settings";
 
-class App extends PureComponent {
+export class App extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -64,6 +65,7 @@ class App extends PureComponent {
         {error && (
           <div className="App__error">Unexpected error occured: {error}</div>
         )}
+        <Settings onSettingsChange={() => {}} />
         <Table>
           <TableHead>
             <HeadRow>

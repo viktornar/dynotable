@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";
-import App from "./app/App";
+import WithCatsFetcherApp from "./app/App";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<WithCatsFetcherApp />, document.getElementById("root"));
