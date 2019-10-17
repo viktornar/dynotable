@@ -15,6 +15,7 @@ export default function HeadColumn({ children, onSortChange = () => {} }) {
     if (sortOrder !== SORT_ORDER.NONE) {
       onSortChange(sortOrder);
     }
+  // eslint-disable-next-line
   }, [sortOrder]);
   
   return (
