@@ -80,11 +80,7 @@ export class App extends PureComponent {
         );
         const scrollDistanceFromBottom =
           pageHeight - (window.pageYOffset + window.innerHeight);
-        console.log(
-          scrollDistanceFromBottom,
-          this.lastKnownScrollPosition,
-          pageHeight
-        );
+
         if (scrollDistanceFromBottom < 150) {
           this.setState({ currentScroll: this.state.currentScroll + 1 });
           window.scrollTo = this.lastKnownScrollPosition - 200;
@@ -252,4 +248,4 @@ export class App extends PureComponent {
   }
 }
 
-export default withCatsFetcher(App, false);
+export default withCatsFetcher(App);
