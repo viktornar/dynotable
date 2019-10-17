@@ -9,7 +9,7 @@ import {
   HeadColumn
 } from "../components/dynoTable";
 import "./App.scss";
-import { multipleSort } from "../utils";
+import { multipleSort, sliceData } from "../utils";
 import withCatsFetcher from "../hocs/withCatsFetcher";
 import Settings from "../components/settings/Settings";
 
@@ -19,7 +19,7 @@ export class App extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      sortedData: [],
+      data: [],
       sortBy: [
         {
           prop: "name",
@@ -44,23 +44,18 @@ export class App extends PureComponent {
   }
 
   componentDidUpdate(_prevProps, prevState) {
-    const { sortedData } = prevState;
-    const { data } = this.props;
-    if (sortedData.length !== data.length) {
-      this.setState({ sortedData: data });
+    if (prevState.data.length !== this.props.data.length) {
+      this.setState({ data: this.props.data });
     }
   }
 
   handleSort(propToSort) {
     return sortDirection => {
-      const { sortBy, sortedData } = this.state;
+      const { sortBy } = this.state;
       const index = sortBy.findIndex(({ prop }) => prop === propToSort);
       const newSortBy = [...sortBy];
       newSortBy[index].direction = sortDirection;
-      const newData = [...sortedData];
-      multipleSort(newData, newSortBy);
       this.setState({
-        sortedData: newData,
         sortBy: newSortBy
       });
     };
@@ -74,19 +69,11 @@ export class App extends PureComponent {
     this.setState({ currentPage });
   }
 
-  getSlicedData(sortedData, currentPage, isPagination) {
-    return isPagination
-      ? sortedData.slice(
-          (currentPage - 1) * ROWS_PER_PAGE,
-          currentPage * ROWS_PER_PAGE
-        )
-      : sortedData;
-  }
-
   render() {
     const { isFetching, error } = this.props;
-    const { isPagination, sortedData, currentPage } = this.state;
-    const data = this.getSlicedData(sortedData, currentPage, isPagination);
+    const { isPagination, data, currentPage, sortBy } = this.state;
+    multipleSort(data, sortBy);
+    const dataToShow = isPagination ? sliceData(data, currentPage, ROWS_PER_PAGE) : data;
 
     return (
       <div className="App">
@@ -96,7 +83,7 @@ export class App extends PureComponent {
         <Settings onSettingsChange={(this.handleSettingsChange)} defaultPagination={isPagination} />
         <Table
           isPagination={isPagination}
-          count={sortedData.length}
+          count={data.length}
           rowsPerPage={ROWS_PER_PAGE}
           onPaginationChange={this.handlePaginationChange}
         >
@@ -118,8 +105,8 @@ export class App extends PureComponent {
               <div className="App__loader">Data is fetching...</div>
             ) : (
               <>
-                {data.length > 0 &&
-                  data.map(({ name, country, favorite_greeting }, idx) => (
+                {dataToShow.length > 0 &&
+                  dataToShow.map(({ name, country, favorite_greeting }, idx) => (
                     <BodyRow key={idx}>
                       <BodyColumn>{name}</BodyColumn>
                       <BodyColumn>{country}</BodyColumn>

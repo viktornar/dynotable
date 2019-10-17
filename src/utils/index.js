@@ -30,3 +30,11 @@ export function debounce(func, wait) {
     timeout = setTimeout(() => func.apply(context, args), wait);
   };
 }
+
+export function sliceData(arr, index, range) {
+  if (!Array.isArray(arr)) {
+    throw new Error("Unsupported data type");
+  }
+
+  return arr.slice((index - 1) * range, index * range);
+}
