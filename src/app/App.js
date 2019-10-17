@@ -4,8 +4,8 @@ import axios from "axios";
 import {
   Table,
   TableHead,
-  TableRow,
-  TableColumn,
+  BodyRow,
+  BodyColumn,
   TableBody,
   HeadRow,
   HeadColumn
@@ -107,16 +107,16 @@ class App extends PureComponent {
           </TableHead>
           <TableBody>
             {isLoading ? (
-              <div className="App__loader">Loading...</div>
+              <div className="App__loader">Data is fetching...</div>
             ) : (
               <>
                 {cats.length > 0 &&
                   cats.map(({ id, name, country, favorite_greeting }) => (
-                    <TableRow key={id}>
-                      <TableColumn>{name}</TableColumn>
-                      <TableColumn>{country}</TableColumn>
-                      <TableColumn>{favorite_greeting}</TableColumn>
-                    </TableRow>
+                    <BodyRow key={id}>
+                      <BodyColumn>{name}</BodyColumn>
+                      <BodyColumn>{country}</BodyColumn>
+                      <BodyColumn>{favorite_greeting}</BodyColumn>
+                    </BodyRow>
                   ))}
               </>
             )}
