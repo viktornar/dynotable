@@ -11,7 +11,7 @@ import {
   HeadColumn
 } from "../components/dynoTable";
 import "./App.scss";
-import { multipleSort, quickMultipleSort } from "../services";
+import { multipleSort } from "../utils";
 
 const CATS_API =
   "https://raw.githubusercontent.com/viktornar/dynotable/master/data/cats.json";
