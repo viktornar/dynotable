@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/dynotable/precache-manifest.8ba78b9c0d0a1abedcf61ee48f448ace.js"
+  "/dynotable/precache-manifest.ec27e2a437c87e83e2a56d6c31302388.js"
 );
 
 self.addEventListener('message', (event) => {
