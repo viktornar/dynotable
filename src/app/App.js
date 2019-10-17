@@ -13,6 +13,7 @@ import "./App.scss";
 import { multipleSort, sliceByRange } from "../utils";
 import withCatsFetcher from "../hocs/withCatsFetcher";
 import Settings from "../components/settings/Settings";
+import Modal from "../components/modal/Modal";
 
 const ROWS_PER_PAGE = 10;
 
@@ -37,13 +38,16 @@ export class App extends PureComponent {
       ],
       isPagination: true,
       currentPage: 1,
-      selectedItemId: ""
+      selectedItemId: "",
+      showModal: false,
+      selectedItem: {}
     };
 
     this.handleSortChange = this.handleSortChange.bind(this);
     this.handleSettingsChange = this.handleSettingsChange.bind(this);
     this.handlePaginationChange = this.handlePaginationChange.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
+    this.handleModalButtonClick = this.handleModalButtonClick.bind(this);
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -72,22 +76,45 @@ export class App extends PureComponent {
     this.setState({ currentPage });
   }
 
-  handleRowClick(selectedItemId) {
-    this.setState({selectedItemId})
+  handleRowClick(selectedItem) {
+    return _evt => {
+      this.setState({
+        selectedItemId: selectedItem.id,
+        showModal: true,
+        selectedItem
+      });
+    };
+  }
+
+  handleModalButtonClick() {
+    this.setState({ showModal: false });
   }
 
   render() {
     const { isFetching, error } = this.props;
-    const { isPagination, data, currentPage, sortBy, selectedItemId } = this.state;
+    const {
+      isPagination,
+      data,
+      currentPage,
+      sortBy,
+      selectedItemId,
+      selectedItem,
+      showModal
+    } = this.state;
     multipleSort(data, sortBy);
-    const dataToShow = isPagination ? sliceByRange(data, currentPage, ROWS_PER_PAGE) : data;
+    const dataToShow = isPagination
+      ? sliceByRange(data, currentPage, ROWS_PER_PAGE)
+      : data;
 
     return (
       <div className="App">
         {error && (
           <div className="App__error">Unexpected error occured: {error}</div>
         )}
-        <Settings onSettingsChange={(this.handleSettingsChange)} defaultPagination={isPagination} />
+        <Settings
+          onSettingsChange={this.handleSettingsChange}
+          defaultPagination={isPagination}
+        />
         <Table
           isPagination={isPagination}
           count={data.length}
@@ -102,7 +129,9 @@ export class App extends PureComponent {
               <HeadColumn onSortChange={this.handleSortChange("country")}>
                 Country
               </HeadColumn>
-              <HeadColumn onSortChange={this.handleSortChange("favorite_greeting")}>
+              <HeadColumn
+                onSortChange={this.handleSortChange("favorite_greeting")}
+              >
                 Greeting
               </HeadColumn>
             </HeadRow>
@@ -113,21 +142,59 @@ export class App extends PureComponent {
             ) : (
               <>
                 {dataToShow.length > 0 &&
-                  dataToShow.map(({ id, name, country, favorite_greeting }) => { 
+                  dataToShow.map(({ id, name, country, favorite_greeting }) => {
                     const selectedClassName = clsx({
                       "App__table-row--selected": selectedItemId === id
                     });
                     return (
-                    <BodyRow key={id} itemId={id} onRowClick={this.handleRowClick}>
-                      <BodyColumn className={selectedClassName}>{name}</BodyColumn>
-                      <BodyColumn className={selectedClassName}>{country}</BodyColumn>
-                      <BodyColumn className={selectedClassName}>{favorite_greeting}</BodyColumn>
-                    </BodyRow>
-                  )})}
+                      <BodyRow
+                        key={id}
+                        onRowClick={this.handleRowClick({
+                          id,
+                          name,
+                          country,
+                          favorite_greeting
+                        })}
+                      >
+                        <BodyColumn className={selectedClassName}>
+                          {name}
+                        </BodyColumn>
+                        <BodyColumn className={selectedClassName}>
+                          {country}
+                        </BodyColumn>
+                        <BodyColumn className={selectedClassName}>
+                          {favorite_greeting}
+                        </BodyColumn>
+                      </BodyRow>
+                    );
+                  })}
               </>
             )}
           </TableBody>
         </Table>
+        {showModal && (
+          <Modal>
+            <div className="flexContainer">
+              <div className="flexChild rowParent">
+                <div className="flexChild columnParent">
+                  <BodyRow>
+                    <div className="flexChild columnParent App__modal-table-head">
+                      <BodyColumn >Name</BodyColumn>
+                      <BodyColumn>Country</BodyColumn>
+                      <BodyColumn>Greeting</BodyColumn>
+                    </div>
+                    <div className="flexChild columnParent">
+                      <BodyColumn>{selectedItem.name}</BodyColumn>
+                      <BodyColumn>{selectedItem.country}</BodyColumn>
+                      <BodyColumn>{selectedItem.favorite_greeting}</BodyColumn>
+                    </div>
+                  </BodyRow>
+                  <button onClick={this.handleModalButtonClick}>Close</button>
+                </div>
+              </div>
+            </div>
+          </Modal>
+        )}
       </div>
     );
   }
